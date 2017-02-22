@@ -13,14 +13,14 @@ As of 02/21/2017, the code is functional for creating cards, creating decks and 
 
 1. Use inquirer package to ask user to do the following:
 
-   *Create Deck or View Deck
+   * Create Deck or View Deck
 
-   		*If create, then
-   			*Ask user to give a name and category for the deck
-   			*Prompt user to create a card
-   			*After Card creation, ask user to either create another card, save deck, or start over
+   		* If create, then
+   			* Ask user to give a name and category for the deck
+   			* Prompt user to create a card
+   			* After Card creation, ask user to either create another card, save deck, or start over
 
-   		*If view deck, then
-   			*Prompt user to choose deck from saved decks
-   			*Cycle through each card in the deck and quiz user on the answer
-   			*After cycling through each card, ask user to start over or start over
+   		* If view deck, then
+   			* Prompt user to choose deck from saved decks
+   			* Cycle through each card in the deck and quiz user on the answer
+   			* After cycling through each card, ask user to start over or start over
