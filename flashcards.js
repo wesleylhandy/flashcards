@@ -12,13 +12,26 @@ const Deck = decks.Deck;
 
 function chooseDeck() {
 	//use inquirer to allow users to select from a list of decks stored in a file
-	const decks = getDecksFromFile(); //function that returns an array of Deck objects
+	var savedDecks = getDecksFromFile(); //function that returns an array of Deck objects
 
-	inquirer.prompt([{}]).then((response)=> {
-
-		const activeDeck = decks[response.index];
-
+	savedDecks.forEach((deck)=> {
+		deck = new Deck(deck.deck_name, deck.category);
+		console.log(deck);
+		deck.cards.forEach((card)=>{
+			if (card.type == "basic") {
+				card = new BasicCard(card.front, card.back);
+			} else {
+				card = new ClozeCard(card.fullText, card.cloze);
+			}
+			console.log(card);
+		});
 	});
+
+	// inquirer.prompt([{}]).then((response)=> {
+
+	// 	const activeDeck = savedDecks[response.index];
+
+	// });
 	
 }
 
@@ -59,26 +72,27 @@ function writeDeckToFile(deck) {
 }
 
 
-// // testing
-// var clozeOne = new ClozeCard("Abraham Lincoln was the 16th President of the United States.", "Abraham Lincoln");
-// console.log("Partial Card: " + clozeOne.showPartial());
-// console.log("Full Text: " + clozeOne.showFullText());
-// console.log("Cloze: " + clozeOne.showCloze());
-// var woodchuck = new ClozeCard("How much wood could a woodchuck chuck if a woodchuck could chuck wood?", "woodchuck");
-// console.log("Partial Card: " + woodchuck.showPartial());
+// testing
+var clozeOne = new ClozeCard("Abraham Lincoln was the 16th President of the United States.", "Abraham Lincoln");
+console.log("Partial Card: " + clozeOne.showPartial());
+console.log("Full Text: " + clozeOne.showFullText());
+console.log("Cloze: " + clozeOne.showCloze());
+var woodchuck = new ClozeCard("How much wood could a woodchuck chuck if a woodchuck could chuck wood?", "woodchuck");
+console.log("Partial Card: " + woodchuck.showPartial());
 
-// var basicOne = new BasicCard("PI", "3.14159265");
-// console.log(basicOne.showFront());
-// console.log(basicOne.showBack());
+var basicOne = new BasicCard("PI", "3.14159265");
+console.log(basicOne.showFront());
+console.log(basicOne.showBack());
 
-// // var clozeTwo = new ClozeCard("foo", "bar");
+// var clozeTwo = new ClozeCard("foo", "bar");
 
-// var deckOne = new Deck("Test", "general");
-// deckOne.addCard(clozeOne, basicOne);
-// deckOne.shuffle();
-// for (let i = 0; i < deckOne.cards.length; i++) {
-// 	console.log(deckOne.nextCard());
-// }
+var deckOne = new Deck("Test", "general");
+deckOne.addCard(clozeOne, basicOne);
+deckOne.shuffle();
+for (let i = 0; i < deckOne.cards.length; i++) {
+	console.log(deckOne.nextCard());
+}
 
-// writeDeckToFile(deckOne);
-// console.log(getDecksFromFile());
+writeDeckToFile(deckOne);
+console.log(getDecksFromFile());
+chooseDeck();

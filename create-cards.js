@@ -2,6 +2,7 @@
 
 const BasicCard = function(front, back) {
 	if (this instanceof BasicCard) {
+		this.type = "basic";
 		this.front = front;
 		this.back = back;
 	} else return new BasicCard(front, back);
@@ -18,6 +19,7 @@ BasicCard.prototype.showBack = function() {
 const ClozeCard = function(text, cloze) {
 	if (this instanceof ClozeCard) {
 		if (text.includes(cloze)) {
+			this.type = 'cloze';
 			this.fullText = text;
 			this.partial = cloze;
 		} else throw new Error("The text and cloze do not match.");
