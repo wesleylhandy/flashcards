@@ -12,33 +12,75 @@ const Deck = decks.Deck;
 
 function chooseDeck() {
 	//use inquirer to allow users to select from a list of decks stored in a file
-	var savedDecks = getDecksFromFile(); //function that returns an array of Deck objects
 
-	savedDecks.forEach((deck)=> {
-		deck = new Deck(deck.deck_name, deck.category);
-		console.log(deck);
-		deck.cards.forEach((card)=>{
+	var savedDecks = convertedData();
+
+	var deckNames = [];
+
+	savedDecks.forEach((deck, index)=>{
+		deckNames.push(`${index}) ${deck.deck_name}`);
+	});
+
+	if (savedDecks.length==0) {
+		console.log(`\nThere are no current decks to choose from. You need to create a deck first.\n`);
+		//call function to create a deck
+	}
+
+	inquirer.prompt([
+		{
+			type: "list",
+			name: "deck",
+			message: "Choose which deck you would like to study?",
+			choices: deckNames
+		}
+	]).then((response)=> {
+
+		var index = response.deck.toString().slice(0,1);
+
+		var activeDeck = savedDecks[index];
+
+		console.log(activeDeck);
+
+		activeDeck.shuffle();
+
+		cycleCards(activeDeck);
+
+	});
+	
+}
+
+function convertedData() {
+	var savedDecks = getDecksFromFile(); 
+
+	savedDecks.forEach((deck, index)=> {
+		// convert data to instance of Deck
+		savedDecks[index] = new Deck(deck.deck_name, deck.category, deck.cards);
+		//convert cards in Deck to instance of card by type
+		savedDecks[index].cards.forEach((card, i)=>{
 			if (card.type == "basic") {
-				card = new BasicCard(card.front, card.back);
+				savedDecks[index].cards[i] = new BasicCard(card.front, card.back);
 			} else {
-				card = new ClozeCard(card.fullText, card.cloze);
+				savedDecks[index].cards[i] = new ClozeCard(card.fullText, card.partial);
 			}
-			console.log(card);
 		});
 	});
 
-	// inquirer.prompt([{}]).then((response)=> {
+	return savedDecks;
 
-	// 	const activeDeck = savedDecks[response.index];
-
-	// });
-	
 }
 
 function getDecksFromFile() {
 
-	let arr = fs.readFileSync('decks.json', 'utf-8');
-	return JSON.parse(arr);
+	if (!fs.existsSync('decks.json')) {
+		return [];
+	} else {
+		let arr = fs.readFileSync('decks.json', 'utf-8');
+		if (!arr) {
+			return [];
+		} else {
+			return JSON.parse(arr);
+		}
+	} 
 }
 
 function writeDeckToFile(deck) {
@@ -71,28 +113,37 @@ function writeDeckToFile(deck) {
 
 }
 
+function cycleCards(deck) {
 
-// testing
-var clozeOne = new ClozeCard("Abraham Lincoln was the 16th President of the United States.", "Abraham Lincoln");
-console.log("Partial Card: " + clozeOne.showPartial());
-console.log("Full Text: " + clozeOne.showFullText());
-console.log("Cloze: " + clozeOne.showCloze());
-var woodchuck = new ClozeCard("How much wood could a woodchuck chuck if a woodchuck could chuck wood?", "woodchuck");
-console.log("Partial Card: " + woodchuck.showPartial());
+	// TODO create function to cycle through deck
+		//use inquirer to get user input to solve either close or back
+		//go to next card
+		//ask user to start over or exit after completing cycle
 
-var basicOne = new BasicCard("PI", "3.14159265");
-console.log(basicOne.showFront());
-console.log(basicOne.showBack());
-
-// var clozeTwo = new ClozeCard("foo", "bar");
-
-var deckOne = new Deck("Test", "general");
-deckOne.addCard(clozeOne, basicOne);
-deckOne.shuffle();
-for (let i = 0; i < deckOne.cards.length; i++) {
-	console.log(deckOne.nextCard());
 }
 
-writeDeckToFile(deckOne);
-console.log(getDecksFromFile());
-chooseDeck();
+
+// // **********testing**********
+
+
+// var clozeOne = new ClozeCard("Abraham Lincoln was the 16th President of the United States.", "Abraham Lincoln");
+// console.log("Partial Card: " + clozeOne.showPartial());
+// console.log("Full Text: " + clozeOne.showFullText());
+// console.log("Cloze: " + clozeOne.showCloze());
+// var woodchuck = new ClozeCard("How much wood could a woodchuck chuck if a woodchuck could chuck wood?", "woodchuck");
+// console.log("Partial Card: " + woodchuck.showPartial());
+
+// var basicOne = new BasicCard("PI", "3.14159265");
+// console.log(basicOne.showFront());
+// console.log(basicOne.showBack());
+
+// // var clozeTwo = new ClozeCard("foo", "bar");
+
+// var deckOne = new Deck("Test", "general", []);
+// deckOne.addCard(clozeOne, basicOne, woodchuck);
+
+
+// writeDeckToFile(deckOne);
+// // console.log(getDecksFromFile());
+
+// chooseDeck();

@@ -1,8 +1,8 @@
-const Deck = function(name, category) {
+const Deck = function(name, category, cards) {
 	if (this instanceof Deck) {
 		this.deck_name = name;
 		this.category = category;
-		this.cards = [];
+		this.cards = cards;
 		this.index = 0;
 	} else return new Deck(name, category);
 }
